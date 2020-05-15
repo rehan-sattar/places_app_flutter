@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:location/location.dart';
+
+import '../helpers/location_helper.dart';
 
 class PlaceInputField extends StatefulWidget {
   PlaceInputField({Key key}) : super(key: key);
@@ -9,6 +12,18 @@ class PlaceInputField extends StatefulWidget {
 
 class _PlaceInputFieldState extends State<PlaceInputField> {
   String _previewImageUrl;
+
+  void _getAndShowCurrentLocation() async {
+    final locData = await Location().getLocation();
+    var previewUrl = LocationHelper.generateLocationPreviewImage(
+      latitude: locData.latitude,
+      longitude: locData.longitude,
+    );
+    setState(() {
+      _previewImageUrl = previewUrl;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -37,7 +52,7 @@ class _PlaceInputFieldState extends State<PlaceInputField> {
             FlatButton.icon(
               icon: Icon(Icons.location_on),
               label: Text('Current Location'),
-              onPressed: () {},
+              onPressed: _getAndShowCurrentLocation,
               textColor: Theme.of(context).primaryColor,
             ),
             FlatButton.icon(
