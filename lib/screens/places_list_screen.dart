@@ -22,24 +22,37 @@ class PlacesListScreen extends StatelessWidget {
         ],
       ),
       body: Center(
-        child: Consumer<PlacesProvider>(
-          child: Center(child: Text('No items. Try adding some!')),
-          builder: (ctx, placesData, ch) {
-            return placesData.items.length <= 0
-                ? ch
-                : ListView.builder(
-                    itemBuilder: (ctx, index) {
-                      return ListTile(
-                        leading: CircleAvatar(
-                          backgroundImage: FileImage(
-                            placesData.items[index].image,
-                          ),
-                        ),
-                        title: Text(placesData.items[index].title),
+        child: FutureBuilder(
+          future: Provider.of<PlacesProvider>(
+            context,
+            listen: false,
+          ).getAndSetPlaces(),
+          builder: (ctx, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            return Consumer<PlacesProvider>(
+              child: Center(child: Text('No items. Try adding some!')),
+              builder: (ctx, placesData, ch) {
+                return placesData.items.length <= 0
+                    ? ch
+                    : ListView.builder(
+                        itemBuilder: (ctx, index) {
+                          return ListTile(
+                            leading: CircleAvatar(
+                              backgroundImage: FileImage(
+                                placesData.items[index].image,
+                              ),
+                            ),
+                            title: Text(placesData.items[index].title),
+                          );
+                        },
+                        itemCount: placesData.items.length,
                       );
-                    },
-                    itemCount: placesData.items.length,
-                  );
+              },
+            );
           },
         ),
       ),

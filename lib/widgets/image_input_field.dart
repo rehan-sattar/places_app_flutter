@@ -20,7 +20,7 @@ class _ImageInputFieldState extends State<ImageInputField> {
     final image = await ImagePicker.pickImage(
       source: ImageSource.camera,
     );
-    print(image);
+    if (image == null) return;
     setState(() {
       _storedImage = image;
     });
@@ -44,6 +44,7 @@ class _ImageInputFieldState extends State<ImageInputField> {
               ? Image.file(
                   _storedImage,
                   fit: BoxFit.cover,
+                  width: double.infinity,
                 )
               : Text(
                   'No Image Taken.',
