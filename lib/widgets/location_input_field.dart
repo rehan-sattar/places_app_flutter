@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 
+import '../screens/map_screen.dart';
 import '../helpers/location_helper.dart';
 
 class PlaceInputField extends StatefulWidget {
@@ -22,6 +23,17 @@ class _PlaceInputFieldState extends State<PlaceInputField> {
     setState(() {
       _previewImageUrl = previewUrl;
     });
+  }
+
+  Future<void> _selectLocationOnMap() async {
+    final selectedLocation = await Navigator.of(context).push(
+      MaterialPageRoute(
+        fullscreenDialog: true,
+        builder: (ctx) => MapsScreen(
+          isSelecting: false,
+        ),
+      ),
+    );
   }
 
   @override
@@ -58,7 +70,7 @@ class _PlaceInputFieldState extends State<PlaceInputField> {
             FlatButton.icon(
               icon: Icon(Icons.map),
               label: Text('Select on Map'),
-              onPressed: () {},
+              onPressed: _selectLocationOnMap,
               textColor: Theme.of(context).primaryColor,
             )
           ],
