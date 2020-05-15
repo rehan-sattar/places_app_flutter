@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:places_app/helpers/location_helper.dart';
 
 import '../models/place.dart';
 import '../helpers/db_helper.dart';
@@ -12,12 +13,26 @@ class PlacesProvider with ChangeNotifier {
     return [..._items];
   }
 
-  void addPlace(String pickedTitle, File pickedImage) {
+  Future<void> addPlace(
+    String pickedTitle,
+    File pickedImage,
+    PlaceLocation pickedLocation,
+  ) async {
+    final address = await LocationHelper.getLocationAddres(
+      pickedLocation.latitude,
+      pickedLocation.longtitude,
+    );
+
+    final location = PlaceLocation(
+      latitude: pickedLocation.latitude,
+      longtitude: pickedLocation.longtitude,
+      address: address,
+    );
     final newPlace = new Place(
       id: DateTime.now().toString(),
       title: pickedTitle,
       image: pickedImage,
-      location: null,
+      location: location,
     );
     _items.add(newPlace);
     notifyListeners();
@@ -25,6 +40,9 @@ class PlacesProvider with ChangeNotifier {
       'id': DateTime.now().toString(),
       'title': newPlace.title,
       'image': newPlace.image.path,
+      'loc_lat': newPlace.location.latitude,
+      'loc_long': newPlace.location.longtitude,
+      'address': newPlace.location.address,
     });
   }
 
@@ -37,7 +55,11 @@ class PlacesProvider with ChangeNotifier {
           title: item['title'],
           // since the item['image'] contains the path, we are creating the image using File.
           image: File(item['image']),
-          location: null,
+          location: PlaceLocation(
+            latitude: item['loc_lat'],
+            longtitude: item['loc_long'],
+            address: item['address'],
+          ),
         );
       },
     ).toList();

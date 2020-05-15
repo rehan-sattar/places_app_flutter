@@ -9,7 +9,7 @@ class DbHelper {
       path.join(dbPath, "user_places.db"),
       onCreate: (db, version) {
         return db.execute(
-          'CREATE TABLE places(id TEXT PRIMARY KEY, title TEXT, image TEXT)',
+          'CREATE TABLE places(id TEXT PRIMARY KEY, title TEXT, image TEXT, loc_lat REAL, loc_long REAL, address TEXT)',
         );
       },
       version: 1,
