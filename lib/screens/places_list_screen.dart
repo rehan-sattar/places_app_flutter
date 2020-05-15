@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/places_provider.dart';
+import './place_details_screen.dart';
 import './add_places_screen.dart';
 
 class PlacesListScreen extends StatelessWidget {
@@ -50,6 +51,12 @@ class PlacesListScreen extends StatelessWidget {
                             subtitle: Text(
                               placesData.items[index].location.address,
                             ),
+                            onTap: () {
+                              Navigator.of(context).pushNamed(
+                                PlaceDetailsScreen.routeName,
+                                arguments: placesData.items[index].id,
+                              );
+                            },
                           );
                         },
                         itemCount: placesData.items.length,
